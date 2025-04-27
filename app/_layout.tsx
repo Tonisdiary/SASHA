@@ -1,210 +1,181 @@
-import { useEffect, useState } from 'react';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useFonts } from 'expo-font';
-import { Platform, View, Text, StyleSheet, Button } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { 
-  Inter_400Regular, 
-  Inter_600SemiBold, 
-  Inter_700Bold 
-} from '@expo-google-fonts/inter';
-import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import { SplashScreen } from 'expo-router';
-import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { Stack, SplashScreen as ExpoSplashScreen, useRouter, useSegments } from 'expo-router';
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import * as SecureStore from 'expo-secure-store';
+import { useEffect, useState, useRef } from 'react';
+import { ActivityIndicator, View, LogBox } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { LoadingScreen } from '@/components/LoadingScreen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { supabaseClient } from 'lib/supabaseClient';
+import { Session } from '@supabase/supabase-js';
 
-export const unstable_settings = {
-  initialRouteName: 'index',
+// Ignore specific log warnings
+LogBox.ignoreLogs([
+  'Warning: Failed prop type: Invalid prop `textStyle` of type `array` supplied to `Cell`, expected `object`.',
+  'Warning: Failed prop type: Invalid prop `dayNamesStyle` of type `array` supplied to `WeekCalendar`, expected `object`.',
+  'Warning: Failed prop type: Invalid prop `style` of type `array` supplied to `WeekCalendar`, expected `object`.',
+  'Warning: Failed prop type: Invalid prop `style` of type `array` supplied to `CalendarProvider`, expected `object`.',
+  'Constants.platform.ios.model has been deprecated in favor of expo-device\'s Device.modelName property. This API will be removed in SDK 45.',
+]);
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+ExpoSplashScreen.preventAutoHideAsync();
+
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!CLERK_PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env');
+}
+
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch {
+      return null;
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch {
+      return;
+    }
+  },
 };
 
-export default function RootLayout() {
-  const [layoutError, setLayoutError] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>('RootLayout initializing...');
-  const [forceShowDebug, setForceShowDebug] = useState(false);
-  
-  // Set a timeout to force showing debug info if loading takes too long
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      console.log('Layout timeout reached, forcing debug view');
-      setForceShowDebug(true);
-      setDebugInfo(prev => prev + '\nLayout timeout reached - forcing debug view');
-    }, 5000); // 5 seconds timeout
-    
-    return () => clearTimeout(timeoutId);
-  }, []);
-  
-  // Try-catch the font loading to prevent crashes
-  let fontsLoaded = false;
-  let fontError: Error | null = null;
-  try {
-    useFrameworkReady();
-    [fontsLoaded, fontError] = useFonts({
-      Inter_400Regular,
-      Inter_600SemiBold,
-      Inter_700Bold,
-      Poppins_600SemiBold,
-    });
-    
-    setDebugInfo(prev => prev + `\nFonts loaded: ${fontsLoaded}`);
-    if (fontError) {
-      setDebugInfo(prev => prev + `\nFont error: ${fontError?.message || 'Unknown font error'}`);
-    }
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error loading fonts';
-    console.error('Error in RootLayout:', errorMessage);
-    setLayoutError(errorMessage);
-    setDebugInfo(prev => prev + `\nCaught error: ${errorMessage}`);
-  }
+const queryClient = new QueryClient();
 
+function InitialLayout() {
+  const { isLoaded: clerkIsLoaded, isSignedIn: clerkIsSignedIn } = useAuth();
+  const segments = useSegments() as string[];
+  const router = useRouter();
+  const [supabaseSession, setSupabaseSession] = useState<Session | null>(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const isNavigationAttempted = useRef(false);
+
+  let [fontsLoaded, fontError] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Poppins_600SemiBold,
+  });
+
+  // Check Supabase session
   useEffect(() => {
-    console.log('RootLayout mounted');
-    setDebugInfo(prev => prev + '\nRootLayout useEffect running');
-    
-    try {
-      if (fontsLoaded || fontError) {
-        setDebugInfo(prev => prev + '\nFonts loaded or error occurred, hiding splash screen');
-        // Only hide splash screen if not on web or if web is ready
-        if (Platform.OS !== 'web' || document.readyState === 'complete') {
-          SplashScreen.hideAsync().catch(err => {
-            console.warn('Error hiding splash screen:', err);
-            setDebugInfo(prev => prev + `\nError hiding splash: ${err.message}`);
-          });
+    const checkSupabaseSession = async () => {
+      try {
+        console.log('Checking Supabase session in _layout...');
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) {
+          console.error('Supabase session check error:', error);
         }
+        setSupabaseSession(data.session);
+      } catch (error) {
+        console.error('Error fetching Supabase session:', error);
+        setSupabaseSession(null);
+      } finally {
+        setSessionLoading(false);
+        console.log('Supabase session check finished.');
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error in useEffect';
-      console.error('Error in RootLayout useEffect:', errorMessage);
-      setLayoutError(errorMessage);
-      setDebugInfo(prev => prev + `\nCaught error in useEffect: ${errorMessage}`);
-    }
-  }, [fontsLoaded, fontError]);
+    };
 
-  // Add special handling for web
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      setDebugInfo(prev => prev + '\nWeb platform detected');
-      // Force navigation to debug page if there are issues
-      const forceDebug = new URLSearchParams(window.location.search).get('debug') === 'true';
-      if (forceDebug) {
-        setDebugInfo(prev => prev + '\nForce debug mode enabled, redirecting');
-        window.location.href = '/debug';
+    checkSupabaseSession();
+
+    const { data: authListener } = supabaseClient.auth.onAuthStateChange(
+      (_event, session) => {
+        console.log('Supabase Auth State Change:', _event, !!session);
+        setSupabaseSession(session);
+        isNavigationAttempted.current = false;
       }
-    }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
-  // Show debug screen if there's an error in the layout or if forced
-  if ((layoutError || forceShowDebug) && Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Layout {layoutError ? 'Error' : 'Debug'}</Text>
-        {layoutError && <Text style={styles.error}>{layoutError}</Text>}
-        <Text style={getDebugInfoStyle()}>{debugInfo}</Text>
-        <View style={styles.buttonContainer}>
-          <Button 
-            title="Go to Debug Screen" 
-            onPress={() => window.location.href = '/debug'}
-          />
-          <Button 
-            title="Go to Debug HTML" 
-            onPress={() => window.location.href = '/debug.html'}
-          />
-          <Button 
-            title="Reload App" 
-            onPress={() => window.location.reload()}
-          />
-        </View>
-      </View>
-    );
-  }
-
-  if (!fontsLoaded && !fontError) {
-    if (Platform.OS === 'web') {
-      return (
-        <View style={styles.container}>
-          <Text style={styles.title}>Loading Fonts...</Text>
-          <Text style={getDebugInfoStyle()}>{debugInfo}</Text>
-        </View>
-      );
+  // Navigation and splash screen handling
+  useEffect(() => {
+    if (!clerkIsLoaded || !fontsLoaded || sessionLoading) {
+      console.log(`Waiting for resources: Clerk Loaded=${clerkIsLoaded}, Fonts Loaded=${fontsLoaded}, Session Loading=${sessionLoading}`);
+      return;
     }
-    return <LoadingScreen message="Loading fonts..." />;
+
+    if (isNavigationAttempted.current) {
+      console.log('Navigation logic already attempted, skipping.');
+      return;
+    }
+
+    console.log('All resources loaded. Evaluating navigation...');
+    const inAuthGroup = segments[0] === '(auth)';
+    const inTabsGroup = segments[0] === '(tabs)';
+    const isOnCustomSplash = segments[0] === 'splash';
+
+    console.log(`Clerk isSignedIn: ${clerkIsSignedIn}, Supabase Session: ${!!supabaseSession}`);
+    console.log(`Current segment: ${segments.join('/') || 'root'}, In Auth Group: ${inAuthGroup}, In Tabs Group: ${inTabsGroup}, On Custom Splash: ${isOnCustomSplash}`);
+
+    const isAuthenticated = !!supabaseSession || clerkIsSignedIn;
+    let performNavigation = false;
+
+    if (isAuthenticated) {
+      if (!inTabsGroup) {
+        console.log('Authenticated: Navigating to (tabs)');
+        router.replace('/(tabs)' as any);
+        performNavigation = true;
+      } else {
+        console.log('Authenticated: Already in (tabs)');
+      }
+    } else {
+      if (!isOnCustomSplash && !inAuthGroup) {
+        console.log('Not authenticated: Navigating to /splash');
+        router.replace('/splash' as any);
+        performNavigation = true;
+      } else {
+        console.log('Not authenticated: Already on splash or in auth group.');
+      }
+    }
+
+    isNavigationAttempted.current = true;
+
+    const hideSplash = async () => {
+      console.log('Hiding native splash screen.');
+      await ExpoSplashScreen.hideAsync();
+      console.log('Native splash screen hidden.');
+    };
+
+    if (performNavigation) {
+      setTimeout(hideSplash, 50);
+    } else {
+      hideSplash();
+    }
+  }, [clerkIsLoaded, clerkIsSignedIn, fontsLoaded, segments, router, supabaseSession, sessionLoading]);
+
+  if (!clerkIsLoaded || !fontsLoaded || sessionLoading) {
+    console.log('InitialLayout: Still loading resources, returning null.');
+    return null;
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <StatusBar style="auto" />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
-          <Stack.Screen name="splash" options={{ headerShown: false }} />
-          <Stack.Screen name="debug" options={{ headerShown: false }} />
-          <Stack.Screen name="emergency-debug" options={{ headerShown: false }} />
-        </Stack>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="splash" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }
 
-// Define base styles
-const baseStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#1e293b',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 16,
-  },
-  error: {
-    fontSize: 16,
-    color: '#ef4444',
-    marginBottom: 24,
-    padding: 12,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderRadius: 8,
-    width: '100%',
-    maxWidth: 500,
-    textAlign: 'center',
-  },
-  debugInfo: {
-    fontSize: 14,
-    color: '#e2e8f0',
-    marginBottom: 24,
-    padding: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    width: '100%',
-    maxWidth: 500,
-    fontFamily: 'monospace',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-    width: '100%',
-    maxWidth: 300,
-    marginTop: 20,
-  },
-});
-
-// Merge styles
-const styles = baseStyles;
-
-// Apply web-specific styles for the debugInfo text component
-const getDebugInfoStyle = () => {
-  if (Platform.OS === 'web') {
-    return [
-      styles.debugInfo, 
-      { whiteSpace: 'pre-wrap' as 'pre-wrap' }
-    ];
-  }
-  return styles.debugInfo;
-};
+export default function RootLayout() {
+  console.log('RootLayout: Rendering...');
+  return (
+    <ClerkProvider tokenCache={tokenCache} publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </ClerkProvider>
+  );
+}

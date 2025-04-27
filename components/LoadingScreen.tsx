@@ -1,31 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
 interface LoadingScreenProps {
   message?: string;
 }
 
-export function LoadingScreen({ message = 'Loading...' }: LoadingScreenProps) {
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ message = 'Loading...' }) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#6366f1" />
       <Text style={styles.message}>{message}</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e293b',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#1e293b',
   },
   message: {
     marginTop: 16,
-    fontSize: 18,
+    fontSize: 16,
     color: '#ffffff',
-    fontFamily: 'Inter_400Regular',
   },
 });

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
-import { supabaseClient } from '@/lib/supabaseClient';
-import { LoadingScreen } from '@/components/LoadingScreen';
+import { supabaseClient } from 'lib/supabaseClient';
+import { LoadingScreen } from 'components/LoadingScreen';
 import { useRouter } from 'expo-router';
 
 export default function SplashScreen() {
@@ -17,7 +17,7 @@ export default function SplashScreen() {
       // Check URL for demo mode parameter
       if (typeof window !== 'undefined' && window.location.search.includes('demo=true')) {
         console.log('Demo mode detected in URL, skipping authentication');
-        router.replace('/(tabs)');
+        router.push('tabs' as any);
         return;
       }
       
@@ -50,12 +50,12 @@ export default function SplashScreen() {
 
   const handleGetStarted = () => {
     console.log('Get Started pressed, navigating to sign-in');
-    router.replace('/auth/sign-in');
+    router.push('auth/sign-in' as any);
   };
   
   const enterDemoMode = () => {
     console.log('Demo mode activated, bypassing authentication');
-    router.replace('/(tabs)');
+    router.push('tabs' as any);
   };
 
   if (isLoading) {
@@ -66,7 +66,7 @@ export default function SplashScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <Image 
-          source={require('@/assets/images/icon.png')}
+          source={require('assets/images/icon.png')}
           style={styles.iconImage}
           resizeMode="contain"
         />

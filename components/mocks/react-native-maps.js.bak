@@ -1,0 +1,15 @@
+// __mocks__/react-native-maps.js
+const { View } = require('react-native');
+
+module.exports = {
+  __esModule: true,
+  default: View,
+  Marker: View,
+  Polyline: View,
+  Polygon: View,
+  Circle: View,
+  PROVIDER_DEFAULT: 'mock-provider',
+  PROVIDER_GOOGLE: 'google-mock',
+  enableLatestRenderer: jest.fn(),
+  // Add all other components you use from the library
+};

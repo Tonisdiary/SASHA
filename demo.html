@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Buddy Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    .button {
+      background-color: #059669;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .button:hover {
+      background-color: #047857;
+    }
+    .button.secondary {
+      background-color: #6366f1;
+    }
+    .button.secondary:hover {
+      background-color: #4f46e5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Study Buddy Demo Mode</h1>
+  <p>Click the button below to enter the app in demo mode. This will bypass authentication and let you explore the app features.</p>
+  
+  <a href="/(tabs)" class="button">Enter Demo Mode</a>
+  <a href="/" class="button secondary">Go to Normal App</a>
+
+  <script>
+    // Auto-redirect after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/(tabs)';
+    }, 2000);
+  </script>
+</body>
+</html>

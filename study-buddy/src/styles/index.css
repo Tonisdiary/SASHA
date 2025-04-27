@@ -1,0 +1,9 @@
+/* Import Tailwind CSS base styles, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add any global base styles or custom utility classes here if needed */
+body {
+  @apply bg-gray-50 font-['Inter'] text-gray-800; /* Using colors close to the palette */
+}

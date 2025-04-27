@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Buddy Static Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #1e293b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .iframe-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+      min-height: 600px;
+    }
+    .controls {
+      background-color: #f1f5f9;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #4f46e5;
+    }
+    .green {
+      background-color: #059669;
+    }
+    .green:hover {
+      background-color: #047857;
+    }
+    .red {
+      background-color: #dc2626;
+    }
+    .red:hover {
+      background-color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Study Buddy Static Demo</h1>
+  </header>
+  
+  <div class="controls">
+    <button onclick="document.getElementById('app-frame').src = 'http://localhost:19006/'">Home</button>
+    <button onclick="document.getElementById('app-frame').src = 'http://localhost:19006/splash'">Splash Screen</button>
+    <button onclick="document.getElementById('app-frame').src = 'http://localhost:19006/auth/sign-in'">Sign In</button>
+    <button class="green" onclick="document.getElementById('app-frame').src = 'http://localhost:19006/(tabs)'">Main App (Tabs)</button>
+    <button class="red" onclick="document.getElementById('app-frame').src = 'http://localhost:19006/debug'">Debug</button>
+  </div>
+  
+  <main>
+    <div class="iframe-container">
+      <iframe id="app-frame" src="http://localhost:19006/" allowfullscreen></iframe>
+    </div>
+  </main>
+
+  <script>
+    // Check if the app is running
+    fetch('http://localhost:19006/', { mode: 'no-cors' })
+      .catch(() => {
+        alert('The app server doesn\'t appear to be running. Please start it with "npm run web" first.');
+      });
+  </script>
+</body>
+</html>

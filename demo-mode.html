@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Buddy Demo Mode</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    .button {
+      background-color: #059669;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+      min-width: 250px;
+    }
+    .button:hover {
+      background-color: #047857;
+    }
+    .button.red {
+      background-color: #dc2626;
+    }
+    .button.red:hover {
+      background-color: #b91c1c;
+    }
+    .button.blue {
+      background-color: #6366f1;
+    }
+    .button.blue:hover {
+      background-color: #4f46e5;
+    }
+    .status {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      color: #10b981;
+    }
+    .container {
+      background-color: #0f172a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      max-width: 600px;
+      width: 100%;
+    }
+    .note {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      max-width: 600px;
+    }
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Study Buddy Demo Mode</h1>
+    
+    <div id="demoStatus">
+      <p>Loading status...</p>
+    </div>
+    
+    <div id="enterDemoSection" style="display: none;">
+      <p>Click the button below to enter demo mode. This will bypass authentication and let you explore the app features.</p>
+      <button id="enterDemoButton" class="button">Enter Demo Mode</button>
+    </div>
+    
+    <div id="exitDemoSection" style="display: none;">
+      <p>You are currently in demo mode. Click the button below to exit demo mode and return to normal authentication.</p>
+      <button id="exitDemoButton" class="button red">Exit Demo Mode</button>
+    </div>
+    
+    <div class="spinner" id="spinner"></div>
+    <div id="statusMessage" class="status" style="display: none;"></div>
+  </div>
+  
+  <div class="container">
+    <h1>Navigation</h1>
+    <button id="goToAppButton" class="button blue">Go to App</button>
+    <button id="goToTabsButton" class="button blue">Go to Main App (Tabs)</button>
+    <div id="appNotRunning" style="display: none; margin-top: 20px; color: #f87171;">
+      <p><strong>Warning:</strong> The app server doesn't appear to be running.</p>
+      <p>Please start it with the following command:</p>
+      <pre style="background: #1f2937; padding: 10px; border-radius: 5px; text-align: left;">npm run web</pre>
+      <button id="startAppButton" class="button" style="background-color: #f59e0b; margin-top: 10px;">Show Start Instructions</button>
+    </div>
+  </div>
+  
+  <div class="note">
+    <p><strong>Note:</strong> Demo mode works by setting a special flag in your browser's localStorage that tells the app to use a mock user instead of requiring authentication. If you encounter any issues, try clearing your browser's cache and localStorage.</p>
+  </div>
+
+  <script>
+    // Check if demo mode is active
+    function isDemoModeActive() {
+      return localStorage.getItem('study_buddy_demo_mode') === 'true';
+    }
+    
+    // Update the UI based on demo mode status
+    function updateUI() {
+      const demoActive = isDemoModeActive();
+      document.getElementById('demoStatus').innerHTML = demoActive 
+        ? '<p>✅ <strong>Demo mode is active.</strong> You can use the app without signing in.</p>' 
+        : '<p>❌ <strong>Demo mode is not active.</strong> You will need to sign in to use the app.</p>';
+      
+      document.getElementById('enterDemoSection').style.display = demoActive ? 'none' : 'block';
+      document.getElementById('exitDemoSection').style.display = demoActive ? 'block' : 'none';
+    }
+    
+    // Enter demo mode
+    function enterDemoMode() {
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('enterDemoButton').disabled = true;
+      
+      // Set demo mode flag in localStorage
+      localStorage.setItem('study_buddy_demo_mode', 'true');
+      
+      // Create a mock user in localStorage to simulate being logged in
+      const mockUser = {
+        id: 'demo-user-123',
+        email: 'demo@example.com',
+        name: 'Demo User',
+        role: 'authenticated',
+        created_at: new Date().toISOString()
+      };
+      
+      // Store the mock user in localStorage
+      localStorage.setItem('supabase.auth.token', JSON.stringify({
+        currentSession: {
+          access_token: 'demo-token',
+          user: mockUser
+        }
+      }));
+      
+      // Show success message
+      setTimeout(() => {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('statusMessage').textContent = 'Demo mode activated successfully!';
+        document.getElementById('statusMessage').style.display = 'block';
+        updateUI();
+        
+        // Auto-redirect after a delay
+        setTimeout(() => {
+          window.location.href = 'http://localhost:19006/(tabs)';
+        }, 1500);
+      }, 1000);
+    }
+    
+    // Exit demo mode
+    function exitDemoMode() {
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('exitDemoButton').disabled = true;
+      
+      // Clear demo mode flag and auth token
+      localStorage.removeItem('study_buddy_demo_mode');
+      localStorage.removeItem('supabase.auth.token');
+      
+      // Show success message
+      setTimeout(() => {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('statusMessage').textContent = 'Demo mode deactivated successfully!';
+        document.getElementById('statusMessage').style.display = 'block';
+        updateUI();
+      }, 1000);
+    }
+    
+    // Check if the app is running
+    function checkAppRunning() {
+      return new Promise((resolve) => {
+        fetch('http://localhost:19006/', { mode: 'no-cors' })
+          .then(() => resolve(true))
+          .catch(() => resolve(false));
+      });
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', async function() {
+      updateUI();
+      
+      // Check if the app is running
+      const appRunning = await checkAppRunning();
+      if (!appRunning) {
+        document.getElementById('appNotRunning').style.display = 'block';
+        document.getElementById('goToAppButton').disabled = true;
+        document.getElementById('goToTabsButton').disabled = true;
+        
+        // Add event listener for the start app button
+        document.getElementById('startAppButton').addEventListener('click', function() {
+          const instructions = `
+To start the app:
+
+1. Open a command prompt or terminal
+2. Navigate to the study-buddy directory:
+   cd c:/Users/tonys/Downloads/study-buddy
+
+3. Run the web app:
+   npm run web
+
+4. Once the app is running, refresh this page
+`;
+          alert(instructions);
+        });
+      }
+      
+      // Set up button event listeners
+      document.getElementById('enterDemoButton').addEventListener('click', enterDemoMode);
+      document.getElementById('exitDemoButton').addEventListener('click', exitDemoMode);
+      document.getElementById('goToAppButton').addEventListener('click', function() {
+        window.location.href = 'http://localhost:19006/';
+      });
+      document.getElementById('goToTabsButton').addEventListener('click', function() {
+        window.location.href = 'http://localhost:19006/(tabs)';
+      });
+    });
+  </script>
+</body>
+</html>

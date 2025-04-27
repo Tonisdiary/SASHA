@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy Debug</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            background-color: #0f172a;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ffffff;
+            margin-top: 0;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
+        .error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        button:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Study Buddy Debug</h1>
+        <p>If you can see this page, your browser is working correctly.</p>
+        
+        <div class="error">
+            This is a standalone HTML file for debugging purposes. If you're seeing this instead of the app, there might be an issue with the React/Expo bundling.
+        </div>
+        
+        <div class="info" id="info">
+            Browser: <span id="browser"></span>
+            Platform: <span id="platform"></span>
+            Screen Size: <span id="screen"></span>
+            Time: <span id="time"></span>
+        </div>
+        
+        <div>
+            <button onclick="window.location.href='/'">Go to App</button>
+            <button onclick="window.location.reload()">Reload Page</button>
+            <button onclick="checkEnv()">Check Environment</button>
+        </div>
+    </div>
+
+    <script>
+        // Basic diagnostics
+        document.getElementById('browser').textContent = navigator.userAgent;
+        document.getElementById('platform').textContent = navigator.platform;
+        document.getElementById('screen').textContent = `${window.innerWidth}x${window.innerHeight}`;
+        document.getElementById('time').textContent = new Date().toISOString();
+        
+        function checkEnv() {
+            const infoElement = document.getElementById('info');
+            infoElement.textContent += '\n\nChecking environment...';
+            
+            // Check if we're running in Expo
+            const isExpo = typeof window !== 'undefined' && window.Expo !== undefined;
+            infoElement.textContent += `\nRunning in Expo: ${isExpo}`;
+            
+            // Check for React
+            const hasReact = typeof window !== 'undefined' && window.React !== undefined;
+            infoElement.textContent += `\nReact available: ${hasReact}`;
+            
+            // Check for React DOM
+            const hasReactDOM = typeof window !== 'undefined' && window.ReactDOM !== undefined;
+            infoElement.textContent += `\nReactDOM available: ${hasReactDOM}`;
+            
+            // Check for process.env
+            const hasProcessEnv = typeof process !== 'undefined' && process.env !== undefined;
+            infoElement.textContent += `\nprocess.env available: ${hasProcessEnv}`;
+            
+            infoElement.textContent += '\n\nEnvironment check complete.';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Demo Mode</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    .button {
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .button:hover {
+      background-color: #b91c1c;
+    }
+    .button.secondary {
+      background-color: #6366f1;
+    }
+    .button.secondary:hover {
+      background-color: #4f46e5;
+    }
+    .status {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      color: #10b981;
+    }
+  </style>
+</head>
+<body>
+  <h1>Clear Demo Mode</h1>
+  <p>Click the button below to clear the demo mode settings and return to normal authentication.</p>
+  
+  <button id="clearButton" class="button">Clear Demo Mode</button>
+  <a href="/" class="button secondary">Go to App</a>
+  
+  <div id="status" class="status" style="display: none;"></div>
+
+  <script>
+    document.getElementById('clearButton').addEventListener('click', function() {
+      // Clear demo mode flag and auth token
+      localStorage.removeItem('study_buddy_demo_mode');
+      localStorage.removeItem('supabase.auth.token');
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Demo mode cleared successfully!';
+      status.style.display = 'block';
+      
+      // Disable the button
+      this.disabled = true;
+      this.textContent = 'Demo Mode Cleared';
+    });
+  </script>
+</body>
+</html>

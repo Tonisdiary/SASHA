@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Study Buddy App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    .container {
+      background-color: #0f172a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      max-width: 800px;
+      width: 100%;
+    }
+    .instructions {
+      text-align: left;
+      background-color: #1f2937;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .step {
+      margin-bottom: 15px;
+    }
+    .command {
+      background-color: #374151;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      margin: 10px 0;
+      user-select: all;
+    }
+    .button {
+      background-color: #059669;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .button:hover {
+      background-color: #047857;
+    }
+    .button.blue {
+      background-color: #6366f1;
+    }
+    .button.blue:hover {
+      background-color: #4f46e5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Start Study Buddy App</h1>
+    <p>Follow these instructions to start the app and use demo mode:</p>
+    
+    <div class="instructions">
+      <div class="step">
+        <h3>Step 1: Open Command Prompt</h3>
+        <p>Open a command prompt or terminal window on your computer.</p>
+      </div>
+      
+      <div class="step">
+        <h3>Step 2: Navigate to the Study Buddy Directory</h3>
+        <p>Type or copy-paste this command:</p>
+        <div class="command">cd c:/Users/tonys/Downloads/study-buddy</div>
+      </div>
+      
+      <div class="step">
+        <h3>Step 3: Start the Web App</h3>
+        <p>Type or copy-paste this command:</p>
+        <div class="command">npm run web</div>
+        <p>Wait for the app to start. You should see a message that says "Starting project at..." and eventually "Webpack compiled successfully".</p>
+      </div>
+      
+      <div class="step">
+        <h3>Step 4: Open Demo Mode</h3>
+        <p>Once the app is running, open this URL in your browser:</p>
+        <div class="command">http://localhost:19006/demo-mode.html</div>
+        <p>Or click the button below after the app is running:</p>
+        <a href="http://localhost:19006/demo-mode.html" class="button blue">Open Demo Mode</a>
+      </div>
+    </div>
+    
+    <p><strong>Note:</strong> Keep the command prompt window open while using the app. Closing it will stop the app from running.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-calendars/pom.xml b/node_modules/react-native-calendars/pom.xml
+index 01d4370..4783467 100644
+--- a/node_modules/react-native-calendars/pom.xml
++++ b/node_modules/react-native-calendars/pom.xml
+@@ -8,11 +8,7 @@
+     <name>Wix React Native Calendar</name>
+     <description>WiX React Native Calendar</description>
+ 
+-    <parent>
+-        <groupId>com.wixpress.common</groupId>
+-        <artifactId>wix-master-parent</artifactId>
+-        <version>100.0.0-SNAPSHOT</version>
+-    </parent>
++    <!-- Removed parent reference that was causing build issues -->
+ 
+     <developers>
+         <developer>
+@@ -35,4 +31,3 @@
+         </developer>
+     </developers>
+ </project>
+\ No newline at end of file
+-

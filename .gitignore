@@ -29,6 +29,8 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+src/config/supabase.ts
 
 # typescript
 *.tsbuildinfo

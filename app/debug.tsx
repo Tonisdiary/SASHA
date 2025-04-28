@@ -29,6 +29,7 @@ export default function DebugScreen() {
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error checking session');
+        console.error(err)
       }
     }
 
@@ -43,9 +44,12 @@ export default function DebugScreen() {
       } else {
         setSessionInfo('Signed out successfully');
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error signing out');
+    } catch (error) {
+        console.error(error);
+        setError(error instanceof Error ? error.message : 'Unknown error signing out');
     }
+    
+
   };
 
   return (

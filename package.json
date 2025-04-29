@@ -31,10 +31,10 @@
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-native-picker/picker": "2.9.0",
     "@react-native-segmented-control/segmented-control": "2.5.4",
-    "@react-navigation/bottom-tabs": "^7.3.10",
+    "@react-navigation/bottom-tabs": "7.2.0",
     "@react-navigation/elements": "^2.3.8",
-    "@react-navigation/native": "^7.1.6",
-    "@react-navigation/native-stack": "^7.3.10",
+    "@react-navigation/native": "7.0.14",
+    "@react-navigation/native-stack": "7.2.0",
     "@react-navigation/stack": "^7.2.10",
     "@shopify/flash-list": "1.7.3",
     "@shopify/react-native-skia": "1.5.0",
@@ -61,7 +61,7 @@
     "expo-location": "~18.0.10",
     "expo-modules-core": "^2.2.3",
     "expo-random": "~14.0.0",
-    "expo-router": "~4.0.20",
+    "expo-router": "^4.0.20",
     "expo-secure-store": "^14.0.1",
     "expo-splash-screen": "^0.29.24",
     "expo-status-bar": "~2.0.1",
@@ -108,7 +108,8 @@
     "url": "^0.11.4",
     "uuid": "^11.1.0",
     "victory-native": "^41.17.1",
-    "zustand": "^4.5.0"
+    "zustand": "^4.5.0",
+    "expo-system-ui": "~4.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

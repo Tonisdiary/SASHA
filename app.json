@@ -17,6 +17,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1e293b"
+    },
+    "backgroundColor": "#1e293b",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.yourcompany.studyapp",
@@ -31,7 +37,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#1e293b"
       },
       "package": "com.yourcompany.studyapp",
       "permissions": [
@@ -41,7 +47,8 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "backgroundColor": "#1e293b"
     },
     "experiments": {
       "typedRoutes": true,

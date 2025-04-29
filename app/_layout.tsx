@@ -1,14 +1,15 @@
 import { Stack, SplashScreen as ExpoSplashScreen, useRouter, useSegments } from 'expo-router';
 import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useState, useRef } from 'react';
-import { ActivityIndicator, View, LogBox } from 'react-native';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { ActivityIndicator, View, LogBox, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { supabaseClient } from 'lib/supabaseClient';
 import { Session } from '@supabase/supabase-js';
+import * as SystemUI from 'expo-system-ui';
 
 // Ignore specific log warnings
 LogBox.ignoreLogs([
@@ -20,7 +21,14 @@ LogBox.ignoreLogs([
 ]);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-ExpoSplashScreen.preventAutoHideAsync();
+ExpoSplashScreen.preventAutoHideAsync().catch(() => {
+  console.warn('Failed to prevent splash screen from auto-hiding');
+});
+
+// Set the background color to match the splash screen
+SystemUI.setBackgroundColorAsync('#1e293b').catch(() => {
+  console.warn('Failed to set system UI background color');
+});
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -53,13 +61,21 @@ function InitialLayout() {
   const router = useRouter();
   const [supabaseSession, setSupabaseSession] = useState<Session | null>(null);
   const [sessionLoading, setSessionLoading] = useState(true);
+  const [appIsReady, setAppIsReady] = useState(false);
   const isNavigationAttempted = useRef(false);
 
+  // Load fonts with error handling
   let [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
     Inter_600SemiBold,
     Poppins_600SemiBold,
   });
+
+  // If there's a font error, log it and proceed anyway
+  if (fontError) {
+    console.warn('Font loading error:', fontError);
+    fontsLoaded = true; // Proceed without the custom fonts
+  }
 
   // Check Supabase session
   useEffect(() => {
@@ -95,10 +111,31 @@ function InitialLayout() {
     };
   }, []);
 
-  // Navigation and splash screen handling
+  // Handle app ready state
   useEffect(() => {
-    if (!clerkIsLoaded || !fontsLoaded || sessionLoading) {
-      console.log(`Waiting for resources: Clerk Loaded=${clerkIsLoaded}, Fonts Loaded=${fontsLoaded}, Session Loading=${sessionLoading}`);
+    if (clerkIsLoaded && fontsLoaded && !sessionLoading) {
+      console.log('App is ready: All resources loaded');
+      setAppIsReady(true);
+    } else {
+      console.log(`Waiting for resources: Clerk=${clerkIsLoaded}, Fonts=${fontsLoaded}, Session=${!sessionLoading}`);
+    }
+  }, [clerkIsLoaded, fontsLoaded, sessionLoading]);
+
+  // Handle splash screen hiding
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      try {
+        console.log('App is ready, hiding splash screen');
+        await ExpoSplashScreen.hideAsync();
+      } catch (e) {
+        console.warn('Error hiding splash screen:', e);
+      }
+    }
+  }, [appIsReady]);
+
+  // Navigation logic
+  useEffect(() => {
+    if (!appIsReady) {
       return;
     }
 
@@ -116,13 +153,11 @@ function InitialLayout() {
     console.log(`Current segment: ${segments.join('/') || 'root'}, In Auth Group: ${inAuthGroup}, In Tabs Group: ${inTabsGroup}, On Custom Splash: ${isOnCustomSplash}`);
 
     const isAuthenticated = !!supabaseSession || clerkIsSignedIn;
-    let performNavigation = false;
 
     if (isAuthenticated) {
       if (!inTabsGroup) {
         console.log('Authenticated: Navigating to (tabs)');
         router.replace('/(tabs)' as any);
-        performNavigation = true;
       } else {
         console.log('Authenticated: Already in (tabs)');
       }
@@ -130,40 +165,29 @@ function InitialLayout() {
       if (!isOnCustomSplash && !inAuthGroup) {
         console.log('Not authenticated: Navigating to /splash');
         router.replace('/splash' as any);
-        performNavigation = true;
       } else {
         console.log('Not authenticated: Already on splash or in auth group.');
       }
     }
 
     isNavigationAttempted.current = true;
+  }, [appIsReady, clerkIsSignedIn, segments, router, supabaseSession]);
 
-    const hideSplash = async () => {
-      console.log('Hiding native splash screen.');
-      await ExpoSplashScreen.hideAsync();
-      console.log('Native splash screen hidden.');
-    };
-
-    if (performNavigation) {
-      setTimeout(hideSplash, 50);
-    } else {
-      hideSplash();
-    }
-  }, [clerkIsLoaded, clerkIsSignedIn, fontsLoaded, segments, router, supabaseSession, sessionLoading]);
-
-  if (!clerkIsLoaded || !fontsLoaded || sessionLoading) {
-    console.log('InitialLayout: Still loading resources, returning null.');
+  // Show nothing until app is ready
+  if (!appIsReady) {
     return null;
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="splash" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <View style={{ flex: 1, backgroundColor: '#1e293b' }} onLayout={onLayoutRootView}>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="splash" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </View>
   );
 }
 

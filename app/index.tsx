@@ -1,8 +1,8 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { supabaseClient as supabase } from '@/lib/supabaseClient';
+import { supabaseClient as supabase } from '../lib/supabaseClient';
 import { Platform, View, Text, StyleSheet, Button } from 'react-native';
-import { LoadingScreen } from '@/components/LoadingScreen';
+import { LoadingScreen } from '../components/LoadingScreen';
 
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);

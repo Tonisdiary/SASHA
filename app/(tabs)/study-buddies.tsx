@@ -8,7 +8,8 @@ import {
   Image, 
   ActivityIndicator, 
   Switch,
-  Platform
+  Platform,
+  Alert
 } from 'react-native';
 import * as Location from 'expo-location';
 import { supabase } from '@/lib/supabase';
@@ -213,9 +214,9 @@ export default function StudyBuddiesScreen() {
     if (chatRoom) {
       // Update to use the new MessagesScreen roomId param
       router.push({
-        pathname: '/messages',
-        params: { roomId: chatRoom.id }
-      });
+        pathname: 'messages',
+        params: { roomId: String(chatRoom.id) }
+      } as any);
     }
   } catch (error) {
     console.error('Error creating chat:', error);
@@ -339,34 +340,35 @@ export default function StudyBuddiesScreen() {
 
       <View style={styles.mapContainer}>
         {location && (
-          <Map
-            ref={mapRef}
-            style={styles.map}
-            initialRegion={{
+      <Map
+        style={styles.map}
+        initialRegion={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}>
+          <Marker
+            coordinate={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}>
-              <View style={styles.currentUserMarker} />
-            </Marker>
+            }}
+          >
+          <View style={styles.currentUserMarker} />
+        </Marker> as any
 
-            {buddies.map((buddy) => (
-              <Marker
-                key={buddy.id}
-                coordinate={{
-                  latitude: buddy.latitude,
-                  longitude: buddy.longitude,
-                }}>
-                {renderBuddyMarker(buddy)}
-              </Marker>
-            ))}
-          </Map>
+        {buddies.map((buddy) => (
+          <Marker
+            key={buddy.id}
+            coordinate={{
+              latitude: buddy.latitude,
+              longitude: buddy.longitude,
+            }}
+            >
+            {renderBuddyMarker(buddy)}
+          </Marker> as any
+        ))}
+      </Map>
         )}
       </View>
 

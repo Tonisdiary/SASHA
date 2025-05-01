@@ -15,7 +15,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
         }
         .container {
@@ -24,9 +24,16 @@
             background-color: #334155;
             border-radius: 1rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin: 2rem;
         }
         h1 {
             font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
             margin-bottom: 1rem;
             color: #f8fafc;
         }
@@ -72,6 +79,12 @@
         .button.secondary:hover {
             background-color: #334155;
         }
+        .button.danger {
+            background-color: #ef4444;
+        }
+        .button.danger:hover {
+            background-color: #dc2626;
+        }
         .actions {
             margin-top: 2rem;
         }
@@ -86,6 +99,29 @@
             overflow-y: auto;
             white-space: pre-wrap;
         }
+        .card {
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .steps {
+            text-align: left;
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+        .steps li {
+            margin-bottom: 0.75rem;
+            color: #cbd5e1;
+        }
+        .code {
+            background-color: #0f172a;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
@@ -94,13 +130,42 @@
         <h1>Study Buddy</h1>
         <p>Welcome to Study Buddy! This is a static web version of the app.</p>
         
-        <div class="actions">
-            <a href="https://filluppmbagrzugmcqzb.supabase.co" target="_blank" class="button">Open Supabase Dashboard</a>
-            <a href="http://localhost:19006" class="button">Open Local Development Server</a>
-            <button onclick="checkServer()" class="button secondary">Check Server Status</button>
+        <div class="card">
+            <h2>Quick Links</h2>
+            <div class="actions">
+                <a href="https://filluppmbagrzugmcqzb.supabase.co" target="_blank" class="button">Open Supabase Dashboard</a>
+                <a href="http://localhost:19006" class="button">Open Local Development Server</a>
+                <button onclick="checkServer()" class="button secondary">Check Server Status</button>
+            </div>
+            <div class="status" id="status">Ready to connect...</div>
         </div>
         
-        <div class="status" id="status">Ready to connect...</div>
+        <div class="card">
+            <h2>Troubleshooting</h2>
+            <p>If you're having issues starting the app, try these steps:</p>
+            <ol class="steps">
+                <li>Create a new Expo project using the script: <code>create-new-project.bat</code></li>
+                <li>Follow the migration guide: <code>MIGRATION-GUIDE.md</code></li>
+                <li>Try running with the no-dev flag: <code>npx expo start --no-dev --web</code></li>
+                <li>Clear the Metro cache: <code>npx expo start --clear</code></li>
+            </ol>
+        </div>
+        
+        <div class="card">
+            <h2>Node.js Version Issue</h2>
+            <p>The error <code>ExpoMetroConfig.loadAsync is not a function</code> is often caused by using a newer version of Node.js (v17+) with an older version of Expo.</p>
+            <p>You have Node.js v22.15.0 installed, which is not compatible with the legacy Expo CLI.</p>
+            <div class="code">
+                <pre>Options to fix this:
+1. Create a new project with the latest Expo version
+2. Downgrade Node.js to v16.x
+3. Use a Node.js version manager like nvm</pre>
+            </div>
+            <div class="actions">
+                <a href="https://nodejs.org/download/release/v16.20.2/" target="_blank" class="button">Download Node.js v16.20.2</a>
+                <a href="https://github.com/nvm-sh/nvm" target="_blank" class="button secondary">Learn about nvm</a>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -116,6 +181,11 @@
                     statusEl.textContent = 'Server is not running or not accessible.\n\nTo start the server:\n1. Open a terminal in the project directory\n2. Run: npx expo start --web\n\nError: ' + error.message;
                 });
         }
+        
+        // Check server status on page load
+        window.addEventListener('load', function() {
+            setTimeout(checkServer, 1000);
+        });
     </script>
 </body>
 </html>

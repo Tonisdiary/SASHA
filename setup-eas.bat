@@ -50,7 +50,7 @@ echo # Set simulator to true >> setup-eas-temp.ps1
 echo $easJson.build.development.ios.simulator = $true >> setup-eas-temp.ps1
 echo. >> setup-eas-temp.ps1
 echo # Update the CLI version >> setup-eas-temp.ps1
-echo $easJson.cli.version = "^3.18.3" >> setup-eas-temp.ps1
+echo $easJson.cli.version = "^16.3.3" >> setup-eas-temp.ps1
 echo. >> setup-eas-temp.ps1
 echo # Save the updated eas.json >> setup-eas-temp.ps1
 echo $easJson ^| ConvertTo-Json -Depth 10 ^| Set-Content -Path "eas.json" >> setup-eas-temp.ps1

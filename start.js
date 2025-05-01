@@ -43,9 +43,17 @@ try {
 // Start the app
 console.log('🌐 Starting the app in web mode...');
 try {
+  // Use the newer expo CLI command
   execSync('npx expo start --web', { stdio: 'inherit' });
 } catch (error) {
   console.error('❌ Failed to start the app:', error.message);
+  console.log('🔄 Trying alternative start method...');
+  
+  try {
+    execSync('npx expo start --no-dev --web', { stdio: 'inherit' });
+  } catch (altError) {
+    console.error('❌ Alternative start method also failed:', altError.message);
+  }
   
   // Try to fix common issues
   console.log('🔧 Attempting to fix common issues...');

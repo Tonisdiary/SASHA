@@ -16,7 +16,8 @@ pause > nul
 
 echo.
 echo Running EAS init...
-call npx eas init --id b0829ebb-4926-4d9b-9d34-1a16db43d4eb
+call npx eas init
+
 
 if %ERRORLEVEL% NEQ 0 (
     echo Failed to initialize EAS project. Please try again.

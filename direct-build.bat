@@ -72,11 +72,11 @@ REM Set the EAS project ID directly
 set EAS_PROJECT_ID=b0829ebb-4926-4d9b-9d34-1a16db43d4eb
 
 if "%platform%"=="all" (
-    echo Running: npx eas build --platform all --profile %profile% --non-interactive --project-id %EAS_PROJECT_ID%
-    call npx eas build --platform all --profile %profile% --non-interactive --project-id %EAS_PROJECT_ID%
+    echo Running: npx eas build --platform all --profile %profile% --non-interactive
+    call npx eas build --platform all --profile %profile% --non-interactive
 ) else (
-    echo Running: npx eas build --platform %platform% --profile %profile% --non-interactive --project-id %EAS_PROJECT_ID%
-    call npx eas build --platform %platform% --profile %profile% --non-interactive --project-id %EAS_PROJECT_ID%
+    echo Running: npx eas build --platform %platform% --profile %profile% --non-interactive
+    call npx eas build --platform %platform% --profile %profile% --non-interactive
 )
 
 echo.

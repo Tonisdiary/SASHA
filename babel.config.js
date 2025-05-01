@@ -6,13 +6,41 @@ module.exports = function (api) {
       ['@babel/plugin-transform-react-jsx', {
         runtime: 'automatic'
       }],
-      '@babel/plugin-transform-modules-commonjs',
+      '@babel/plugin-transform-modules-commonjs',,
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
       '@babel/plugin-transform-runtime',
       ['module-resolver', {
         root: ['.'],
         alias: {
           '@': '.',
-          'react-native-maps': './node_modules/react-native-maps/lib/commonjs'
+          'react-native-maps': './node_modules/react-native-maps/lib/commonjs',,,,,,
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
+          ...(process.env.EXPO_TARGET === 'web' ? {
+            '@react-native/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js',
+            'react-native/Libraries/EventEmitter/NativeEventEmitter': './mocks/NativeEventEmitter.js'
+          } : {})
         },
         extensions: [
           '.ios.js',

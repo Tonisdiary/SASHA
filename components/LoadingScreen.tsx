@@ -16,13 +16,18 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
       // Hide the native splash screen if requested
       const hideSplash = async () => {
         try {
+          console.log('LoadingScreen: Attempting to hide native splash screen');
           await ExpoSplashScreen.hideAsync();
+          console.log('LoadingScreen: Native splash screen hidden successfully');
         } catch (e) {
-          console.warn('Error hiding splash screen:', e);
+          console.warn('LoadingScreen: Error hiding splash screen:', e);
+          // Continue even if there's an error hiding the splash screen
         }
       };
       
       hideSplash();
+    } else {
+      console.log('LoadingScreen: Not hiding native splash screen (not requested)');
     }
   }, [hideNativeSplash]);
 

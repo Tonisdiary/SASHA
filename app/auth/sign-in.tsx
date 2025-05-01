@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { LoadingScreen } from '@/components/LoadingScreen';
-import { useAuth } from '@/hooks/useAuth';
+import { LoadingScreen } from '../../components/LoadingScreen';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function SignIn() {
   const { signIn } = useAuth();
@@ -23,15 +23,9 @@ export default function SignIn() {
 
     try {
       console.log('Attempting to sign in with:', email);
-      const result = await signIn(email, password);
-      
-      if (result.success) {
-        console.log('Sign in successful, navigating to tabs');
-        router.replace('/(tabs)');
-      } else {
-        console.error('Sign in failed:', result.error);
-        setError(result.error ?? 'An error occurred');
-      }
+      await signIn(email, password);
+      console.log('Sign in successful, navigating to tabs');
+      router.replace('/(tabs)');
     } catch (err) {
       console.error('Unexpected error during sign in:', err);
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');

@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "newArchEnabled": true,
+    "entryPoint": "./index.js",
     "plugins": [
       "expo-router",
       "expo-document-picker",

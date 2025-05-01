@@ -29,7 +29,13 @@ export default function SplashScreenPage() {
       // If there was an error loading fonts, we'll still proceed
       if (fontError) {
         console.warn('Font loading error in splash screen:', fontError);
+        // Even with font errors, we should continue with system fonts
+        console.log('Continuing with system fonts');
+      } else {
+        console.log('Custom fonts loaded successfully');
       }
+    } else {
+      console.log('Waiting for fonts to load...');
     }
   }, [fontsLoaded, fontError]);
 
@@ -44,9 +50,12 @@ export default function SplashScreenPage() {
     try {
       // Ensure the native splash screen is hidden
       try {
+        console.log('Attempting to hide native splash screen from splash.tsx');
         await ExpoSplashScreen.hideAsync();
+        console.log('Native splash screen hidden successfully');
       } catch (e) {
-        console.warn('Error hiding splash screen:', e);
+        console.warn('Error hiding native splash screen:', e);
+        // Continue even if there's an error hiding the splash screen
       }
       
       // Check URL for demo mode parameter
@@ -59,6 +68,7 @@ export default function SplashScreenPage() {
       console.log('Checking session in splash screen...');
       // For demo purposes, we'll just show the splash screen without checking auth
       setIsLoading(false);
+      console.log('Splash screen ready to display');
       
       /* Commented out for demo purposes
       const { data, error } = await supabaseClient.auth.getSession();

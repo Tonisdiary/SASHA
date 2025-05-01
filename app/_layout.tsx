@@ -1,3 +1,9 @@
+// Import web polyfills first
+import '../app/polyfills.web.js';
+
+// Import web polyfills first
+import './fix-web';
+
 import { Stack, SplashScreen as ExpoSplashScreen, useRouter, useSegments } from 'expo-router';
 import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import * as SecureStore from 'expo-secure-store';
@@ -21,8 +27,8 @@ LogBox.ignoreLogs([
 ]);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-ExpoSplashScreen.preventAutoHideAsync().catch(() => {
-  console.warn('Failed to prevent splash screen from auto-hiding');
+ExpoSplashScreen.preventAutoHideAsync().catch((error) => {
+  console.warn('Failed to prevent splash screen from auto-hiding:', error);
 });
 
 // Set the background color to match the splash screen
@@ -127,9 +133,14 @@ function InitialLayout() {
       try {
         console.log('App is ready, hiding splash screen');
         await ExpoSplashScreen.hideAsync();
+        console.log('Splash screen hidden successfully');
       } catch (e) {
         console.warn('Error hiding splash screen:', e);
+        // Even if there's an error, we should continue with the app
+        console.log('Continuing despite splash screen error');
       }
+    } else {
+      console.log('App not ready yet, keeping splash screen visible');
     }
   }, [appIsReady]);
 

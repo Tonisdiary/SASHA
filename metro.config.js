@@ -33,6 +33,27 @@ async function getConfig() {
     extraNodeModules: {
       ...config.resolver.extraNodeModules,
       'react-native-maps': path.resolve(__dirname, 'node_modules/react-native-maps'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
       // Add polyfills for Node.js modules
       'fs': path.resolve(__dirname, 'app/mockFs.js'),
       'path': path.resolve(__dirname, 'node_modules/path-browserify'),
@@ -48,31 +69,133 @@ async function getConfig() {
       'url': path.resolve(__dirname, 'app/emptyModule.js'),
       'net': path.resolve(__dirname, 'app/emptyModule.js'),
       'tls': path.resolve(__dirname, 'app/emptyModule.js'),
-      'assert': path.resolve(__dirname, 'app/emptyModule.js'),
-      'util': path.resolve(__dirname, 'app/emptyModule.js'),
-      'os': path.resolve(__dirname, 'app/mockOs.js'),
-      'module': path.resolve(__dirname, 'app/mockModule.js'),
-      'constants': path.resolve(__dirname, 'app/mockConstants.js'),
-      // Add mocks for npm modules
-      'uglify-js': path.resolve(__dirname, 'app/emptyModule.js'),
-      '@swc/core': path.resolve(__dirname, 'app/emptyModule.js'),
-      'esbuild': path.resolve(__dirname, 'app/emptyModule.js'),
-      'svgo': path.resolve(__dirname, 'app/mockSvgo.js'),
-      'graceful-fs': path.resolve(__dirname, 'app/mockGracefulFs.js'),
-      'globby': path.resolve(__dirname, 'app/mockGlobby.js'),
-      // Mock for expo-router
-      'expo-router/node/render': path.resolve(__dirname, 'app/mockExpoRouterRender.js'),
-      'react-native-fs': path.resolve(__dirname, 'app/mockFs.js'),
-      // Mock for lightningcss
-      'lightningcss': path.resolve(__dirname, 'app/mockLightningcss.js'),
-      '../pkg': path.resolve(__dirname, 'app/emptyModule.js'),
-      'node:fs': path.resolve(__dirname, 'app/mockFs.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
     },
     resolverMainFields: ['browser', 'main'],
   };
 
   // Custom resolver for problematic modules
   config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      };
+    }
+      'svgo': path.resolve(__dirname, 'app/mockSvgo.js'),
+      'graceful-fs': path.resolve(__dirname, 'app/mockGracefulFs.js'),
+      'globby': path.resolve(__dirname, 'app/mockGlobby.js'),
+      // Mock for expo-router
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+    },
+    resolverMainFields: ['browser', 'main'],
+  };
+
+  // Custom resolver for problematic modules
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      };
+    }
+      'expo-router/node/render': path.resolve(__dirname, 'app/mockExpoRouterRender.js'),
+      'react-native-fs': path.resolve(__dirname, 'app/mockFs.js'),
+      // Mock for lightningcss
+      'lightningcss': path.resolve(__dirname, 'app/mockLightningcss.js'),
+      'svgo': path.resolve(__dirname, 'app/mockSvgo.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+    },
+    resolverMainFields: ['browser', 'main'],
+  };
+
+  // Custom resolver for problematic modules
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      };
+    }
+      'graceful-fs': path.resolve(__dirname, 'app/mockGracefulFs.js'),
+      'globby': path.resolve(__dirname, 'app/mockGlobby.js'),
+      // Mock for expo-router
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+    },
+    resolverMainFields: ['browser', 'main'],
+  };
+
+  // Custom resolver for problematic modules
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      };
+    }
+      'expo-router/node/render': path.resolve(__dirname, 'app/mockExpoRouterRender.js'),
+      'react-native-fs': path.resolve(__dirname, 'app/mockFs.js'),
+      // Mock for lightningcss
+      'lightningcss': path.resolve(__dirname, 'app/mockLightningcss.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+    },
+    resolverMainFields: ['browser', 'main'],
+  };
+
+  // Custom resolver for problematic modules
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      };
+    }
+      '../pkg': path.resolve(__dirname, 'app/emptyModule.js'),
+      'node:fs': path.resolve(__dirname, 'app/mockFs.js'),
+      // Mock for NativeEventEmitter
+      '@react-native/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+      'react-native/Libraries/EventEmitter/NativeEventEmitter': path.resolve(__dirname, 'app/mockNativeEventEmitter.js'),
+    },
+    resolverMainFields: ['browser', 'main'],
+  };
+
+  // Custom resolver for problematic modules
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    // Handle NativeEventEmitter for web platform
+    if (platform === 'web' && 
+        (moduleName === '@react-native/EventEmitter/NativeEventEmitter' || 
+         moduleName === 'react-native/Libraries/EventEmitter/NativeEventEmitter')) {
+      return {
+        type: 'sourceFile',
+        filePath: path.resolve(__dirname, 'mocks/NativeEventEmitter.js'),
+      };
+    }
+    
     // Handle webpack modules
     if (moduleName.includes('webpack') || 
         (context.originModulePath && context.originModulePath.includes('webpack'))) {
@@ -118,4 +241,4 @@ async function getConfig() {
   return config;
 }
 
-module.exports = getConfig;
+module.exports = getConfig();

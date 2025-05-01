@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { LoadingScreen } from '@/components/LoadingScreen';
-import { useAuth } from '@/hooks/useAuth';
+import { LoadingScreen } from '../../components/LoadingScreen';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function SignUp() {
   const { signUp } = useAuth();
@@ -24,14 +24,14 @@ export default function SignUp() {
 
     try {
       console.log('Attempting to sign up with:', email);
-      const result = await signUp(email, password, username);
+      const result = await signUp(email, password);
       
-      if (result.success) {
-        console.log('Sign up successful, navigating to tabs');
-        router.replace('/(tabs)');
-      } else {
-        console.error('Sign up failed:', result.error);
-        setError(result.error ?? 'An error occurred');
+      // After sign up, we need to update the user's profile with the username
+      if (result && result.user) {
+        console.log('Sign up successful, navigating to sign in');
+        // For Supabase, we typically redirect to sign-in after sign-up
+        // as the user may need to verify their email
+        router.replace('/auth/sign-in');
       }
     } catch (err) {
       console.error('Unexpected error during sign up:', err);

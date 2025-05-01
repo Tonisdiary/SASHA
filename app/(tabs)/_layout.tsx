@@ -13,8 +13,8 @@ import {
   Users,
   BrainCircuit
 } from 'lucide-react-native';
-import { useAuth } from '@/hooks/useAuth';
-import { LoadingScreen } from '@/components/LoadingScreen';
+import { useAuth } from '../../hooks/useAuth';
+import { LoadingScreen } from '../../components/LoadingScreen';
 import { useRouter } from 'expo-router';
 
 export const unstable_settings = {

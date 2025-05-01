@@ -8,7 +8,17 @@ EAS (Expo Application Services) is a set of cloud services designed specifically
 
 ## Setup Instructions
 
-### 1. Configure EAS Project
+### 1. Install EAS CLI
+
+First, run the `install-eas.bat` script to install the EAS CLI locally in your project:
+
+```
+.\install-eas.bat
+```
+
+This script will install the EAS CLI as a development dependency in your project.
+
+### 2. Configure EAS Project
 
 Run the `setup-eas.bat` script to configure your EAS project:
 
@@ -21,7 +31,7 @@ This script will:
 - Update `app.json` with the correct EAS project ID and owner
 - Update `eas.json` to include iOS simulator configuration
 
-### 2. Log in to EAS
+### 3. Log in to EAS
 
 Run the `eas-login.bat` script to log in to your Expo account:
 
@@ -31,7 +41,7 @@ Run the `eas-login.bat` script to log in to your Expo account:
 
 You'll need to have an Expo account to use EAS Build. If you don't have one, you can create one at [expo.dev](https://expo.dev/signup).
 
-### 3. Build Your App
+### 4. Build Your App
 
 Run the `eas-build.bat` script to build your app:
 

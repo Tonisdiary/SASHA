@@ -1,17 +1,26 @@
 @echo off
+setlocal
+
+REM Get the directory where this batch file is located
+set "SCRIPT_DIR=%~dp0"
+cd /d "%SCRIPT_DIR%"
+
 echo ===================================
 echo EAS Build Helper
 echo ===================================
 
 echo Checking EAS CLI installation...
-where eas >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo EAS CLI not found. Installing...
-    call npm install -g eas-cli
+if not exist "node_modules\.bin\eas.cmd" (
+    echo EAS CLI not found locally. Installing...
+    call npm install --save-dev eas-cli
     if %ERRORLEVEL% NEQ 0 (
-        echo Failed to install EAS CLI. Please install it manually with: npm install -g eas-cli
-        pause
-        exit /b 1
+        echo Failed to install EAS CLI locally. Trying alternative method...
+        call npm install eas-cli
+        if %ERRORLEVEL% NEQ 0 (
+            echo Failed to install EAS CLI. Please check your npm configuration.
+            pause
+            exit /b 1
+        )
     )
 )
 

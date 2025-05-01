@@ -18,20 +18,37 @@ First, run the `install-eas.bat` script to install the EAS CLI locally in your p
 
 This script will install the EAS CLI as a development dependency in your project.
 
-### 2. Configure EAS Project
+### 2. Fix EAS CLI Version
 
-Run the `setup-eas.bat` script to configure your EAS project:
+Run the `fix-eas-version.bat` script to fix the EAS CLI version constraint in your eas.json file:
 
 ```
-.\setup-eas.bat
+.\fix-eas-version.bat
 ```
 
-This script will:
-- Create a `.easconfig` file with your project ID
-- Update `app.json` with the correct EAS project ID and owner
-- Update `eas.json` to include iOS simulator configuration
+This script will update the eas.json file to use the correct version constraint for your installed EAS CLI.
 
-### 3. Log in to EAS
+### 3. Initialize EAS Project
+
+Run the `eas-init.bat` script to initialize your EAS project:
+
+```
+.\eas-init.bat
+```
+
+This script will link your local project to your EAS project on Expo's servers.
+
+### 4. Fix EAS Project Configuration
+
+If you encounter any issues with the EAS project configuration, run the `fix-eas-project.bat` script:
+
+```
+.\fix-eas-project.bat
+```
+
+This script will fix the EAS project configuration by creating a proper .easconfig file and updating app.json.
+
+### 5. Log in to EAS
 
 Run the `eas-login.bat` script to log in to your Expo account:
 
@@ -41,7 +58,7 @@ Run the `eas-login.bat` script to log in to your Expo account:
 
 You'll need to have an Expo account to use EAS Build. If you don't have one, you can create one at [expo.dev](https://expo.dev/signup).
 
-### 4. Build Your App
+### 6. Build Your App
 
 Run the `eas-build.bat` script to build your app:
 
